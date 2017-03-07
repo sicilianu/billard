@@ -49,42 +49,47 @@ class Table():
         if o.x <= limitsx[0]:
             string = "left"
 
-        elif o.x >= limitsx[1]:
+        if o.x >= limitsx[1]:
             string = "right"
-        elif o.y <= limitsy[0]:
+        if o.y <= limitsy[0]:
             string = "lower"
-        elif o.y >= limitsy[1]:
+        if o.y >= limitsy[1]:
             string = "upper"
         if string == "left" or string == "right":
             o.v = [o.v[0] * (-1), o.v[1]]
-        elif string == "lower" or string == "upper":
+        if string == "lower" or string == "upper":
             o.v = [o.v[0], o.v[1] * (-1)]
 
-    def calcPos(self, i,x0,y0,f):
+    def calcPos(self, i,x0,y0,r):
         if i == 1 or i == 6:
-            return (x0 - f.r),(y0 - f.r/2)
+            return (x0 - r*2) + 0.005,(y0 - r)
         if i == 4 or i > 10 or i == 5:
-            return x0, (y0 - f.r*2)
+            return x0, (y0 - r*2)
         if i == 2 or 7 <= i <= 9:
-            return x0, (y0 + f.r*2)
+            return x0, (y0 + r*2)
         if i == 3 or i == 10:
-            return (x0 - f.r), (y0 + f.r / 2)
+            return (x0 - r*2) + 0.005, (y0 + r)
 
 
-    triangle = [1, 0, 1, 1, 8, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0]
+
 
     def buildTriangle(self,x0, y0):
+        numcol = { "1": color.YELLOW, "2": color.BLUE, "3": color.RED, "4": color.PINK, "5": color.ORANGE,
+                  "6": color.DARK_GREEN, "7": color.BROWN, "8": color.BLACK, "9": color.YELLOW, "10": color.BLUE,
+                  "11": color.RED, "12": color.PINK, "13": color.ORANGE, "14": color.DARK_GREEN, "15": color.BROWN}
+        triangle = [1, 1, 0, 1, 8, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0]
         xprev = x0
         yprev = y0
-        f = kugel.Ball(color.WHITE, xprev,yprev)
-        tmp = [f]
-        for i in range(1, len(triangle)-1):
-            pos = calcPos(i,xprev,yprev)
-            ball = kugel.Ball(color.WHITE, bool(triangle[i]), *pos)
+
+
+        tmp = []
+        for i in range(1, len(triangle)+1):
+
+            ball = kugel.Ball(numcol[str(i)], bool(triangle[i-1]),str(i), xprev,yprev)
+            pos = self.calcPos(i, xprev, yprev, ball.r)
             tmp.append(ball)
             xprev, yprev = pos
 
         return tmp
 
-        return tmp
 

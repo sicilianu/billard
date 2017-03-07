@@ -15,6 +15,9 @@ class Ball():
         self.marker = marker
         self.number = number
         self.drawBall()
+        self.collided = []
+        self.timer = 0
+        self.l = []
     def drawBall(self):
         draw.setPenColor(self.color)
         draw.filledCircle(self.x, self.y, self.r)
@@ -26,9 +29,27 @@ class Ball():
             draw.text(self.x, self.y, self.number)
 
     def collision(self,o):
-        abstand = math.sqrt((self.x - o.x)**2 + (self.y - o.y)**2)
-        if abstand <= 2*self.r:
-            self.v, o.v = o.v, self.v
+        dx = o.x-self.x
+        dy = o.y-self.y
+        abstand = dx**2+dy**2
+        v1d = self.v[0]*dx + self.v[1]*dy
+        v2d = o.v[0]*dx + o.v[1]*dy
+        if abstand < (2*self.r)**2:
+            self.v[0] = self.v[0] -dx * (v1d-v2d)/abstand
+            self.v[1] = self.v[1] -dy* (v1d-v2d)/abstand
+            o.v[0] = o.v[0] - dx * (v2d - v1d)/abstand
+            o.v[1] = o.v[1] - dy * (v2d - v1d)/abstand
+
+
+        self.l.append(abstand)
+
+
+    def export(self):
+        with open("./data.csv", "w") as f:
+            for elem in self.l:
+                f.write(str(elem)+"\n")
+
+
 
 
 
@@ -52,8 +73,8 @@ class Ball():
     def mouseMove(self):
         if draw.mousePressed():
             tupel = list(draw.mousePosition())
-            self.v[0] = (tupel[0] - self.x) * 0.01
-            self.v[1] = (tupel[1] - self.y) * 0.01
+            self.v[0] = (tupel[0] - self.x) * 0.015
+            self.v[1] = (tupel[1] - self.y) * 0.015
 
 
 
