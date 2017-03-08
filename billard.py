@@ -30,16 +30,12 @@ def mouseMove(o):
 
 t = tisch.Table()
 t.createTable()
-colors = [color.BLACK, color.WHITE, color.RED,
-          color.BLUE, color.YELLOW, color.PINK]
-numbers = [str(i) for i in range(16)]
 whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
 balls = t.buildTriangle(0.5, 0.5)
 heaven = 0.05
 hell = 0.05
 for b in balls:
-
-    if b.marker == True:
+    if b.marker:
         b.Pos = [heaven, 0.9]
         heaven += 4 * b.r
     else:
@@ -63,8 +59,7 @@ while True:
         for other in balls:
             if elem != other:
                 elem.collision(other)
-    if draw.hasNextKeyTyped():
-        whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
-        balls = t.buildTriangle(0.5, 0.5)
-
+    # if draw.hasNextKeyTyped():
+    #     whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
+    #     balls = t.buildTriangle(0.5, 0.5)
     draw.show(1)
