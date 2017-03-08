@@ -79,18 +79,19 @@ class Table():
         if string == "lower" or string == "upper":
             o.v = [o.v[0], o.v[1] * (-1)]
 
-    def triangleCoords(self, x0, y0):
+    def triangleCoords(self, x0, y0, n=6):
+        """Returns an array of the proper coordinate pairs for the initial
+        position of the balls on the board."""
         tmp = []
         xprev = x0
         yprev = y0
-        upper = y0 + 0
-        for i in range(6):
+        upper = y0
+        for i in range(n):
             if i != 0:
                 y0 = upper + 0.01
                 x0 -= 0.05
             for j in range(i):
                 tmp.append((x0, y0))
-                print(x0, y0)
                 if j == 0:
                     upper = y0
                 y0 -= 0.05
@@ -105,15 +106,15 @@ class Table():
         triangle = [1, 1, 0, 1, 8, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0]
         xprev = x0
         yprev = y0
-
         coords = self.triangleCoords(0.5, 0.5)
         tmp = []
         for i, pair in enumerate(numcol):
-            ball = kugel.Ball(numcol[i][0], bool(
-                triangle[i - 1]), numcol[i][1], coords[i][0], coords[i][1])
-            pos = (xprev - ball.r, yprev - ball.r)
+            ball = kugel.Ball(numcol[i][0],
+                              bool(triangle[i - 1]),
+                              numcol[i][1],
+                              coords[i][0],
+                              coords[i][1])
             tmp.append(ball)
-            xprev, yprev = pos
 
         return tmp
 
