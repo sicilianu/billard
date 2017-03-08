@@ -97,24 +97,35 @@ class Table():
                 y0 -= 0.05
         return tmp
 
-    def buildTriangle(self, x0, y0):
+    def buildTriangle(self, x0, y0, n=6):
         numcol = [(color.YELLOW, "1"), (color.BLUE, "2"), (color.RED, "3"),
                   (color.PINK, "4"),  (color.BLACK, "8"), (color.DARK_GREEN, "6"),
                   (color.BROWN, "7"), (color.ORANGE, "5"), (color.YELLOW, "9"),
                   (color.BLUE, "10"), (color.RED, "11"), (color.PINK, "12"),
                   (color.ORANGE, "13"), (color.DARK_GREEN, "14"),  (color.BROWN, "15")]
         triangle = [1, 1, 0, 1, 8, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0]
-        xprev = x0
-        yprev = y0
-        coords = self.triangleCoords(0.5, 0.5)
         tmp = []
         for i, pair in enumerate(numcol):
-            ball = kugel.Ball(numcol[i][0],
-                              bool(triangle[i - 1]),
-                              numcol[i][1],
-                              coords[i][0],
-                              coords[i][1])
-            tmp.append(ball)
+
+            xprev = x0
+        yprev = y0
+        upper = y0
+        for i in range(n):
+            if i != 0:
+                y0 = upper + 0.01
+                x0 -= 0.05
+            for j in range(i):
+                ball = kugel.Ball(numcol[i][0],
+                                  bool(triangle[i - 1]),
+                                  numcol[i][1],
+                                  x0,
+                                  y0)
+
+                if j == 0:
+                    upper = y0
+                y0 -= 0.05
+
+                tmp.append(ball)
 
         return tmp
 
