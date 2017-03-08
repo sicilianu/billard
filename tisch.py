@@ -17,6 +17,7 @@ class Table():
             0.05, 0.25), "Upperright": (0.95, 0.7), "Lowerright": (0.95, 0.25)}
 
     def createTable(self):
+        """Draw all the entities on the table."""
         draw.setPenColor(color.GREEN)
         draw.filledRectangle(0.05, 0.25, 0.9, 0.45)
         draw.setPenColor(color.DARK_GRAY)
@@ -33,7 +34,8 @@ class Table():
                              self.edge, self.edge * 2, self.edge)
         draw.filledRectangle(0.5 - (self.edge), 0.25 +
                              0.45, self.edge * 2, self.edge)
-
+        # Define lists of coordinates to make drawing the corner holes
+        # easier.
         self.upperrightx = [0.95 - self.edge, 0.95,
                             0.95 + self.edge, 0.95 + self.edge, 0.95]
         self.upperrighty = [0.7, 0.7 - self.edge,
@@ -59,6 +61,13 @@ class Table():
         draw.filledPolygon(self.lowerleftx, self.lowerlefty)
 
     def reflection(self, o):
+        """Make the bumpers reflect any balls hitting them by
+        inverting their velocity vector whenever a ball reaches the
+        limits.
+
+
+        Parts of the bumpers in the middle of the upper and lower
+        bumper are excluded to allow using them as holes."""
         string = ""
         limitsx = (0.05 + o.r, 0.95 - o.r)
         limitsy = (0.25 + o.r, 0.7 - o.r)
@@ -101,6 +110,13 @@ class Table():
         return tmp
 
     def buildTriangle(self, x0, y0, n=6):
+        """Initiates the balls required to play the game.
+
+
+        Associate colors with numbers and boolean values to
+        identify balls and initiates balls with these values and the
+        proper initial positions. Returns a list of ball objects. This
+        list is the one that is supposed to bo used throughout the game."""
         numcol = [(color.YELLOW, "1"), (color.BLUE, "2"), (color.RED, "3"),
                   (color.PINK, "4"),  (color.BLACK, "8"), (color.DARK_GREEN, "6"),
                   (color.BROWN, "7"), (color.ORANGE, "5"), (color.YELLOW, "9"),
@@ -117,7 +133,15 @@ class Table():
             tmp.append(ball)
         return tmp
 
-    def ballInCorner(self, b):
+    def ballInHole(self, b):
+        """Check whether a ball rolls into a hole. Returns true if it
+        has, False otherwise.
+
+
+        The corner holes are checked using the coordinates of the
+        corners of the table, the side-holes are checked using their
+        property of being actual holes.
+        """
         hit = False
         for k, v in self.corners.items():
             distsquare = ((b.x - v[0])**2 + (b.y - v[1])**2)
@@ -131,10 +155,12 @@ class Table():
         return hit
 
     def Holes(self, o):
-        if self.ballInCorner(o):
+        """Remove a ball from the table if it has hit a hole."""
+        if self.ballInHole(o):
             self.killBall(o)
 
     def killBall(self, o):
+        """Remove a ball from the table."""
         o.v = [0, 0]
         if o.number == "0":
             o.x = 0.75
