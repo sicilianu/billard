@@ -4,13 +4,17 @@ import color
 import kugel
 import time
 
+
 class Table():
+
     def __init__(self, edge=0.03):
         draw.setCanvasSize(600, 600)
         self.edge = edge
         self.limitsx = (0.05, 0.95)
         self.limitsy = (0.25, 0.7)
-        self.corners = {"Upperleft": (0.05,0.95), "Lowerleft": (0.05,0.25), "Upperright": (0.95,0.7), "Lowerright": (0.95,0.25)}
+        self.corners = {"Upperleft": (0.05, 0.95), "Lowerleft": (
+            0.05, 0.25), "Upperright": (0.95, 0.7), "Lowerright": (0.95, 0.25)}
+
     def createTable(self):
         draw.setPenColor(color.GREEN)
         draw.filledRectangle(0.05, 0.25, 0.9, 0.45)
@@ -24,91 +28,101 @@ class Table():
         draw.setPenColor(color.BLACK)
         draw.setPenRadius()
         # Draw upper and lower middle holes
-        draw.filledRectangle(0.5 - (self.edge), 0.25 - self.edge, self.edge * 2, self.edge)
-        draw.filledRectangle(0.5 - (self.edge), 0.25 + 0.45, self.edge * 2, self.edge)
+        draw.filledRectangle(0.5 - (self.edge), 0.25 -
+                             self.edge, self.edge * 2, self.edge)
+        draw.filledRectangle(0.5 - (self.edge), 0.25 +
+                             0.45, self.edge * 2, self.edge)
 
-        self.upperrightx = [0.95 - self.edge, 0.95, 0.95 + self.edge, 0.95 + self.edge, 0.95]
-        self.upperrighty = [0.7, 0.7 - self.edge, 0.7, 0.7 + self.edge, 0.7 + self.edge]
+        self.upperrightx = [0.95 - self.edge, 0.95,
+                            0.95 + self.edge, 0.95 + self.edge, 0.95]
+        self.upperrighty = [0.7, 0.7 - self.edge,
+                            0.7, 0.7 + self.edge, 0.7 + self.edge]
 
-        self.lowerrightx = [0.95 - self.edge, 0.95, 0.95 + self.edge, 0.95 + self.edge, 0.95]
-        self.lowerrighty = [0.25, 0.25 + self.edge, 0.25, 0.25 - self.edge, 0.25 - self.edge]
+        self.lowerrightx = [0.95 - self.edge, 0.95,
+                            0.95 + self.edge, 0.95 + self.edge, 0.95]
+        self.lowerrighty = [0.25, 0.25 + self.edge,
+                            0.25, 0.25 - self.edge, 0.25 - self.edge]
 
-        self.upperleftx = [0.05, 0.05 + self.edge, 0.05, 0.05 - self.edge, 0.05 - self.edge]
-        self.upperlefty = [0.7 - self.edge, 0.7, 0.7 + self.edge, 0.7 + self.edge, 0.7]
+        self.upperleftx = [0.05, 0.05 + self.edge,
+                           0.05, 0.05 - self.edge, 0.05 - self.edge]
+        self.upperlefty = [0.7 - self.edge, 0.7,
+                           0.7 + self.edge, 0.7 + self.edge, 0.7]
 
-        self.lowerleftx = [0.05, 0.05 + self.edge, 0.05, 0.05 - self.edge, 0.05 - self.edge]
-        self.lowerlefty = [0.25 + self.edge, 0.25, 0.25 - self.edge, 0.25 - self.edge, 0.25]
+        self.lowerleftx = [0.05, 0.05 + self.edge,
+                           0.05, 0.05 - self.edge, 0.05 - self.edge]
+        self.lowerlefty = [0.25 + self.edge, 0.25,
+                           0.25 - self.edge, 0.25 - self.edge, 0.25]
         draw.filledPolygon(self.upperrightx, self.upperrighty)
         draw.filledPolygon(self.lowerrightx, self.lowerrighty)
         draw.filledPolygon(self.upperleftx, self.upperlefty)
         draw.filledPolygon(self.lowerleftx, self.lowerlefty)
 
-
-    def reflection(self,o):
+    def reflection(self, o):
         string = ""
-        limitsx = (0.05+o.r, 0.95-o.r)
-        limitsy = (0.25+o.r, 0.7-o.r)
+        limitsx = (0.05 + o.r, 0.95 - o.r)
+        limitsy = (0.25 + o.r, 0.7 - o.r)
 
-        if o.x <= limitsx[0] :
+        if o.x <= limitsx[0]:
             string = "left"
-        if o.x >= limitsx[1] :
+        if o.x >= limitsx[1]:
             string = "right"
-        if o.y <= limitsy[0] and o.x < 0.52-self.edge:
+        if o.y <= limitsy[0] and o.x < 0.52 - self.edge:
             string = "lower"
-        if o.y <= limitsy[0] and o.x > 0.48+self.edge:
+        if o.y <= limitsy[0] and o.x > 0.48 + self.edge:
             string = "lower"
-        if o.y >= limitsy[1] and o.x > 0.52+self.edge:
+        if o.y >= limitsy[1] and o.x > 0.52 + self.edge:
             string = "upper"
-        if o.y >= limitsy[1] and o.x < 0.48-self.edge:
+        if o.y >= limitsy[1] and o.x < 0.48 - self.edge:
             string = "upper"
         if string == "left" or string == "right":
             o.v = [o.v[0] * (-1), o.v[1]]
         if string == "lower" or string == "upper":
             o.v = [o.v[0], o.v[1] * (-1)]
 
-    def triangleCoords(self,x0,y0):
+    def triangleCoords(self, x0, y0):
         tmp = []
         xprev = x0
         yprev = y0
         upper = 0
-        for i in range(0,6):
+        for i in range(6):
             if i != 0:
                 y0 = upper + 0.01
                 x0 -= 0.05
             for j in range(i):
-                tmp.append((x0,y0))
-                print(x0,y0)
+                tmp.append((x0, y0))
+                print(x0, y0)
                 if j == 0:
                     upper = y0
                 y0 -= 0.05
         return tmp
 
-
-    def buildTriangle(self,x0, y0):
-        numcol = { "1": (color.YELLOW, "1"), "2": (color.BLUE, "2"), "3": (color.RED, "3"), "4": (color.PINK, "4"), "5": (color.BLACK, "8"),
-                  "6": (color.DARK_GREEN, "6"), "7": (color.BROWN, "7"), "8": (color.ORANGE, "5"), "9": (color.YELLOW, "9"), "10": (color.BLUE, "10"),
-                  "11": (color.RED, "11"), "12": (color.PINK, "12"), "13": (color.ORANGE, "13"), "14": (color.DARK_GREEN, "14"), "15": (color.BROWN, "15")}
+    def buildTriangle(self, x0, y0):
+        numcol = [(color.YELLOW, "1"), (color.BLUE, "2"), (color.RED, "3"),
+                  (color.PINK, "4"),  (color.BLACK, "8"), (color.DARK_GREEN, "6"),
+                  (color.BROWN, "7"), (color.ORANGE, "5"), (color.YELLOW, "9"),
+                  (color.BLUE, "10"), (color.RED, "11"), (color.PINK, "12"),
+                  (color.ORANGE, "13"), (color.DARK_GREEN, "14"),  (color.BROWN, "15")]
         triangle = [1, 1, 0, 1, 8, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0]
         xprev = x0
         yprev = y0
 
-        coords = self.triangleCoords(0.5,0.5)
+        coords = self.triangleCoords(0.5, 5)
         tmp = []
-        for i in range(1, len(triangle)+1):
-            ball = kugel.Ball(numcol[str(i)][0], bool(triangle[i-1]),numcol[str(i)][1], coords[i-1][0],coords[i-1][1])
+        for i, pair in enumerate(numcol):
+            ball = kugel.Ball(numcol[i][0], bool(
+                triangle[i - 1]), numcol[i][1], coords[i][0], coords[i][1])
             #pos = self.calcPos(xprev, yprev, ball.r)
-            pos = (xprev-ball.r, yprev-ball.r)
+            pos = (xprev - ball.r, yprev - ball.r)
             tmp.append(ball)
             xprev, yprev = pos
 
-
         return tmp
 
-    def ballInCorner(self,b):
+    def ballInCorner(self, b):
         hit = False
-        for k,v in self.corners.items():
-            distsquare = ((b.x-v[0])**2 + (b.y-v[1])**2)
-            if distsquare <= (b.r*2)**2:
+        for k, v in self.corners.items():
+            distsquare = ((b.x - v[0])**2 + (b.y - v[1])**2)
+            if distsquare <= (b.r * 2)**2:
                 hit = True
 
         if b.y < 0.25 and b.y > 0.1:
@@ -117,11 +131,12 @@ class Table():
             hit = True
 
         return hit
-    def Holes(self,o):
+
+    def Holes(self, o):
         if self.ballInCorner(o):
             self.killBall(o)
 
-    def killBall(self,o):
+    def killBall(self, o):
         o.v = [0, 0]
         if o.number == "0":
             o.x = 0.75
@@ -129,10 +144,3 @@ class Table():
         else:
             o.x = o.Pos[0]
             o.y = o.Pos[1]
-
-
-
-
-
-
-
