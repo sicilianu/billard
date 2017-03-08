@@ -59,7 +59,7 @@ while True:
         for other in balls:
             if elem != other:
                 elem.collision(other)
-    # if draw.hasNextKeyTyped():
-    #     whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
-    #     balls = t.buildTriangle(0.5, 0.5)
+    if draw.hasNextKeyTyped():
+        whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
+        balls = t.buildTriangle(0.5, 0.5)
     draw.show(1)
