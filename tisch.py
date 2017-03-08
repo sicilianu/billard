@@ -23,6 +23,7 @@ class Table():
         # Draw Holes on the bumper as polygons and rectangles.
         draw.setPenColor(color.BLACK)
         draw.setPenRadius()
+        # Draw upper and lower middle holes
         draw.filledRectangle(0.5 - (self.edge), 0.25 - self.edge, self.edge * 2, self.edge)
         draw.filledRectangle(0.5 - (self.edge), 0.25 + 0.45, self.edge * 2, self.edge)
 
@@ -42,51 +43,57 @@ class Table():
         draw.filledPolygon(self.upperleftx, self.upperlefty)
         draw.filledPolygon(self.lowerleftx, self.lowerlefty)
 
+
     def reflection(self,o):
         string = ""
         limitsx = (0.05+o.r, 0.95-o.r)
         limitsy = (0.25+o.r, 0.7-o.r)
-        if o.x <= limitsx[0]:
-            string = "left"
 
-        if o.x >= limitsx[1]:
+        if o.x <= limitsx[0] :
+            string = "left"
+        if o.x >= limitsx[1] :
             string = "right"
-        if o.y <= limitsy[0]:
+        if o.y <= limitsy[0] and o.x < 0.52-self.edge:
             string = "lower"
-        if o.y >= limitsy[1]:
+        if o.y <= limitsy[0] and o.x > 0.48+self.edge:
+            string = "lower"
+        if o.y >= limitsy[1] and o.x > 0.52+self.edge:
+            string = "upper"
+        if o.y >= limitsy[1] and o.x < 0.48-self.edge:
             string = "upper"
         if string == "left" or string == "right":
             o.v = [o.v[0] * (-1), o.v[1]]
         if string == "lower" or string == "upper":
             o.v = [o.v[0], o.v[1] * (-1)]
 
-    def calcPos(self, i,x0,y0,r):
-        if i == 1 or i == 6:
-            return (x0 - r*2),(y0 - r)
-        if i == 4 or i > 10 or i == 5:
-            return x0, (y0 - r*2) - 0.005
-        if i == 2 or 7 <= i <= 9:
-            return x0, (y0 + r*2) + 0.005
-        if i == 3 or i == 10:
-            return (x0 - r*2), (y0 + r)
+    def triangleCoords(self,x0,y0,r, n = 6):#
+        tmp = []
+        for i in range(n,step=-1):
+            tmp2 = []
+            for j in range(i):
+                tmp2.append(j)
+            tmp.append(tmp2)
+        
+
+
+
 
 
 
 
     def buildTriangle(self,x0, y0):
-        numcol = { "1": color.YELLOW, "2": color.BLUE, "3": color.RED, "4": color.PINK, "5": color.ORANGE,
-                  "6": color.DARK_GREEN, "7": color.BROWN, "8": color.BLACK, "9": color.YELLOW, "10": color.BLUE,
-                  "11": color.RED, "12": color.PINK, "13": color.ORANGE, "14": color.DARK_GREEN, "15": color.BROWN}
-        triangle = [1, 1, 0, 1, 8, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0]
+        numcol = { "1": (color.YELLOW, "1"), "2": (color.BLUE, "2"), "3": (color.RED, "3"), "4": (color.PINK, "4"), "5": (color.BLACK, "8"),
+                  "6": (color.DARK_GREEN, "6"), "7": (color.BROWN, "7"), "8": (color.ORANGE, "5"), "9": (color.YELLOW, "9"), "10": (color.BLUE, "10"),
+                  "11": (color.RED, "11"), "12": (color.PINK, "12"), "13": (color.ORANGE, "13"), "14": (color.DARK_GREEN, "14"), "15": (color.BROWN, "15")}
+        triangle = [1, 1, 0, 1, 8, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0]
         xprev = x0
         yprev = y0
 
-
         tmp = []
         for i in range(1, len(triangle)+1):
-
-            ball = kugel.Ball(numcol[str(i)], bool(triangle[i-1]),str(i), xprev,yprev)
-            pos = self.calcPos(i, xprev, yprev, ball.r)
+            ball = kugel.Ball(numcol[str(i)][0], bool(triangle[i-1]),numcol[str(i)][1], xprev,yprev)
+            #pos = self.calcPos(xprev, yprev, ball.r)
+            pos = (xprev-ball.r, yprev-ball.r)
             tmp.append(ball)
             xprev, yprev = pos
 
@@ -99,10 +106,26 @@ class Table():
             if distsquare <= (b.r*2)**2:
                 hit = True
 
+        if b.y < 0.25 and b.y > 0.1:
+            hit = True
+        if b.y > 0.7 and b.y < 0.8:
+            hit = True
+
         return hit
     def Holes(self,o):
         if self.ballInCorner(o):
-            o.kill()
+            self.killBall(o)
+
+    def killBall(self,o):
+        o.v = [0, 0]
+        if o.number == "0":
+            o.x = 0.75
+            o.y = 0.5
+        else:
+            o.x = o.Pos[0]
+            o.y = o.Pos[1]
+
+
 
 
 

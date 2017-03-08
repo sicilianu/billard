@@ -15,9 +15,8 @@ class Ball():
         self.marker = marker
         self.number = number
         self.drawBall()
-        self.collided = []
-        self.timer = 0
-        self.l = []
+        self.Pos = None
+
     def drawBall(self):
         draw.setPenColor(self.color)
         draw.filledCircle(self.x, self.y, self.r)
@@ -49,12 +48,6 @@ class Ball():
 
 
 
-        self.l.append(abstand)
-
-
-
-
-
 
 
 
@@ -73,15 +66,17 @@ class Ball():
         else:
             self.v[0] = 0
             self.v[1] = 0
-    def mouseMove(self):
-        if draw.mousePressed():
-            tupel = list(draw.mousePosition())
-            self.v[0] = (tupel[0] - self.x) * 0.015
-            self.v[1] = (tupel[1] - self.y) * 0.015
 
 
 
-    
+
+
+
+
+
+
+
+
 
 
 
