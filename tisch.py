@@ -83,7 +83,7 @@ class Table():
         tmp = []
         xprev = x0
         yprev = y0
-        upper = 0
+        upper = y0 + 0
         for i in range(6):
             if i != 0:
                 y0 = upper + 0.01
@@ -106,12 +106,11 @@ class Table():
         xprev = x0
         yprev = y0
 
-        coords = self.triangleCoords(0.5, 5)
+        coords = self.triangleCoords(0.5, 0.5)
         tmp = []
         for i, pair in enumerate(numcol):
             ball = kugel.Ball(numcol[i][0], bool(
                 triangle[i - 1]), numcol[i][1], coords[i][0], coords[i][1])
-            #pos = self.calcPos(xprev, yprev, ball.r)
             pos = (xprev - ball.r, yprev - ball.r)
             tmp.append(ball)
             xprev, yprev = pos
