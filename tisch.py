@@ -66,19 +66,21 @@ class Table():
         if string == "lower" or string == "upper":
             o.v = [o.v[0], o.v[1] * (-1)]
 
-    def triangleCoords(self,x0,y0,r, n = 6):#
+    def triangleCoords(self,x0,y0):
         tmp = []
-        for i in range(n,step=-1):
-            tmp2 = []
+        xprev = x0
+        yprev = y0
+        upper = 0
+        for i in range(6):
+            if i != 0:
+                y0 = upper + 0.01
+                x0 -= 0.05
             for j in range(i):
-                tmp2.append(j)
-            tmp.append(tmp2)
-        
-
-
-
-
-
+                tmp.append((x0,y0))
+                if j == 0:
+                    upper = y0
+                y0 -= 0.05
+        return tmp
 
 
     def buildTriangle(self,x0, y0):
@@ -89,13 +91,15 @@ class Table():
         xprev = x0
         yprev = y0
 
+        coords = self.triangleCoords(0.5,0.5)
         tmp = []
         for i in range(1, len(triangle)+1):
-            ball = kugel.Ball(numcol[str(i)][0], bool(triangle[i-1]),numcol[str(i)][1], xprev,yprev)
+            ball = kugel.Ball(numcol[str(i)][0], bool(triangle[i-1]),numcol[str(i)][1], coords[i-1][0],coords[i-1][1])
             #pos = self.calcPos(xprev, yprev, ball.r)
             pos = (xprev-ball.r, yprev-ball.r)
             tmp.append(ball)
             xprev, yprev = pos
+
 
         return tmp
 

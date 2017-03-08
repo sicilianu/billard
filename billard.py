@@ -9,20 +9,23 @@ def reset():
     whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
     balls = t.buildTriangle(0.5, 0.5)
 
-def mouseMove():
+def mouseMove(o):
+    if draw.mousePressed():
         tupel = list(draw.mousePosition())
         force = 0
-        vabsx = (tupel[0] - x)
-        vabsy = (tupel[1] - y)
+        vabsx = (tupel[0] - o.x)
+        vabsy = (tupel[1] - o.y)
         lengthv = math.sqrt(vabsx**2+vabsy**2)
         vabsxnorm = vabsx/lengthv
         vabsynorm = vabsy/lengthv
-        while draw.mousePressed():
-            force += 0.01
+        pygame.event.get()
+        while pygame.mouse.get_pressed() != (0,0,0):
+            force += 0.0000001
             print("hier")
-
-        self.v[0] = vabsxnorm * force
-        self.v[1] = vabsynorm * force
+            pygame.event.get()
+        print(force)
+        o.v[0] = -vabsxnorm * force
+        o.v[1] = -vabsynorm * force
 
 
 t = tisch.Table()
@@ -48,7 +51,7 @@ while True:
     whiteBall.drawBall()
     whiteBall.nextPosition()
     t.reflection(whiteBall)
-  #  mouseMove()
+    mouseMove(whiteBall)
     t.Holes(whiteBall)
     for elem in balls:
         elem.nextPosition()
