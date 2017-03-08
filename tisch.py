@@ -71,12 +71,13 @@ class Table():
         xprev = x0
         yprev = y0
         upper = 0
-        for i in range(6):
+        for i in range(0,6):
             if i != 0:
                 y0 = upper + 0.01
                 x0 -= 0.05
             for j in range(i):
                 tmp.append((x0,y0))
+                print(x0,y0)
                 if j == 0:
                     upper = y0
                 y0 -= 0.05

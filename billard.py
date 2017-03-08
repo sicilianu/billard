@@ -21,9 +21,7 @@ def mouseMove(o):
         pygame.event.get()
         while pygame.mouse.get_pressed() != (0,0,0):
             force += 0.0000001
-            print("hier")
             pygame.event.get()
-        print(force)
         o.v[0] = -vabsxnorm * force
         o.v[1] = -vabsynorm * force
 
