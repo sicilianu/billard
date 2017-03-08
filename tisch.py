@@ -3,6 +3,7 @@ import draw
 import color
 import kugel
 import time
+import math
 
 
 class Table():
@@ -83,18 +84,20 @@ class Table():
         """Returns an array of the proper coordinate pairs for the initial
         position of the balls on the board."""
         tmp = []
-        xprev = x0
-        yprev = y0
-        upper = y0
+        x = x0
+        y = y0
+        yup = y0
+        ydown = y0
+        diagonal = math.sqrt((kugel.radius * 2)**2 + kugel.radius**2) / 2
+
         for i in range(n):
-            if i != 0:
-                y0 = upper + 0.01
-                x0 -= 0.05
             for j in range(i):
-                tmp.append((x0, y0))
                 if j == 0:
-                    upper = y0
-                y0 -= 0.05
+                    y = y0 + i * diagonal
+                    x -= 2 * kugel.radius
+                else:
+                    y -= 2 * kugel.radius
+                tmp.append((x, y))
         return tmp
 
     def buildTriangle(self, x0, y0, n=6):
@@ -102,29 +105,16 @@ class Table():
                   (color.PINK, "4"),  (color.BLACK, "8"), (color.DARK_GREEN, "6"),
                   (color.BROWN, "7"), (color.ORANGE, "5"), (color.YELLOW, "9"),
                   (color.BLUE, "10"), (color.RED, "11"), (color.PINK, "12"),
-                  (color.ORANGE, "13"), (color.DARK_GREEN, "14"),  (color.BROWN, "15")]
+                  (color.ORANGE, "13"), (color.DARK_GREEN, "14"),
+                  (color.BROWN, "15")]
         triangle = [1, 1, 0, 1, 8, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0]
         tmp = []
+
+        coords = self.triangleCoords(0.5, 0.5)
         for i, pair in enumerate(numcol):
-            xprev = x0
-            yprev = y0
-            upper = y0
-            if i != 0:
-                y0 = upper + 0.01
-                x0 -= 0.05
-            for j in range(i):
-                ball = kugel.Ball(numcol[i][0],
-                                  bool(triangle[i - 1]),
-                                  numcol[i][1],
-                                  x0,
-                                  y0)
-
-                if j == 0:
-                    upper = y0
-                y0 -= 0.05
-
-                tmp.append(ball)
-
+            x, y = coords[i]
+            ball = kugel.Ball(pair[0], triangle[i], pair[1], x, y)
+            tmp.append(ball)
         return tmp
 
     def ballInCorner(self, b):
@@ -133,7 +123,6 @@ class Table():
             distsquare = ((b.x - v[0])**2 + (b.y - v[1])**2)
             if distsquare <= (b.r * 2)**2:
                 hit = True
-
         if b.y < 0.25 and b.y > 0.1:
             hit = True
         if b.y > 0.7 and b.y < 0.8:
