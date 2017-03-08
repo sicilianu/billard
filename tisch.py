@@ -10,7 +10,7 @@ class Table():
         self.edge = edge
         self.limitsx = (0.05, 0.95)
         self.limitsy = (0.25, 0.7)
-
+        self.corners = {"Upperleft": (0.05,0.95), "Lowerleft": (0.05,0.25), "Upperright": (0.95,0.7), "Lowerright": (0.95,0.25)}
     def createTable(self):
         draw.setPenColor(color.GREEN)
         draw.filledRectangle(0.05, 0.25, 0.9, 0.45)
@@ -26,21 +26,21 @@ class Table():
         draw.filledRectangle(0.5 - (self.edge), 0.25 - self.edge, self.edge * 2, self.edge)
         draw.filledRectangle(0.5 - (self.edge), 0.25 + 0.45, self.edge * 2, self.edge)
 
-        upperrightx = [0.95 - self.edge, 0.95, 0.95 + self.edge, 0.95 + self.edge, 0.95]
-        upperrighty = [0.7, 0.7 - self.edge, 0.7, 0.7 + self.edge, 0.7 + self.edge]
+        self.upperrightx = [0.95 - self.edge, 0.95, 0.95 + self.edge, 0.95 + self.edge, 0.95]
+        self.upperrighty = [0.7, 0.7 - self.edge, 0.7, 0.7 + self.edge, 0.7 + self.edge]
 
-        lowerrightx = [0.95 - self.edge, 0.95, 0.95 + self.edge, 0.95 + self.edge, 0.95]
-        lowerrighty = [0.25, 0.25 + self.edge, 0.25, 0.25 - self.edge, 0.25 - self.edge]
+        self.lowerrightx = [0.95 - self.edge, 0.95, 0.95 + self.edge, 0.95 + self.edge, 0.95]
+        self.lowerrighty = [0.25, 0.25 + self.edge, 0.25, 0.25 - self.edge, 0.25 - self.edge]
 
-        upperleftx = [0.05, 0.05 + self.edge, 0.05, 0.05 - self.edge, 0.05 - self.edge]
-        upperlefty = [0.7 - self.edge, 0.7, 0.7 + self.edge, 0.7 + self.edge, 0.7]
+        self.upperleftx = [0.05, 0.05 + self.edge, 0.05, 0.05 - self.edge, 0.05 - self.edge]
+        self.upperlefty = [0.7 - self.edge, 0.7, 0.7 + self.edge, 0.7 + self.edge, 0.7]
 
-        lowerleftx = [0.05, 0.05 + self.edge, 0.05, 0.05 - self.edge, 0.05 - self.edge]
-        lowerlefty = [0.25 + self.edge, 0.25, 0.25 - self.edge, 0.25 - self.edge, 0.25]
-        draw.filledPolygon(upperrightx, upperrighty)
-        draw.filledPolygon(lowerrightx, lowerrighty)
-        draw.filledPolygon(upperleftx, upperlefty)
-        draw.filledPolygon(lowerleftx, lowerlefty)
+        self.lowerleftx = [0.05, 0.05 + self.edge, 0.05, 0.05 - self.edge, 0.05 - self.edge]
+        self.lowerlefty = [0.25 + self.edge, 0.25, 0.25 - self.edge, 0.25 - self.edge, 0.25]
+        draw.filledPolygon(self.upperrightx, self.upperrighty)
+        draw.filledPolygon(self.lowerrightx, self.lowerrighty)
+        draw.filledPolygon(self.upperleftx, self.upperlefty)
+        draw.filledPolygon(self.lowerleftx, self.lowerlefty)
 
     def reflection(self,o):
         string = ""
@@ -62,13 +62,13 @@ class Table():
 
     def calcPos(self, i,x0,y0,r):
         if i == 1 or i == 6:
-            return (x0 - r*2) + 0.005,(y0 - r)
+            return (x0 - r*2),(y0 - r)
         if i == 4 or i > 10 or i == 5:
-            return x0, (y0 - r*2)
+            return x0, (y0 - r*2) - 0.005
         if i == 2 or 7 <= i <= 9:
-            return x0, (y0 + r*2)
+            return x0, (y0 + r*2) + 0.005
         if i == 3 or i == 10:
-            return (x0 - r*2) + 0.005, (y0 + r)
+            return (x0 - r*2), (y0 + r)
 
 
 
@@ -91,5 +91,20 @@ class Table():
             xprev, yprev = pos
 
         return tmp
+
+    def ballInCorner(self,b):
+        hit = False
+        for k,v in self.corners.items():
+            distsquare = ((b.x-v[0])**2 + (b.y-v[1])**2)
+            if distsquare <= (b.r*2)**2:
+                hit = True
+
+        return hit
+    def Holes(self,o):
+        if self.ballInCorner(o):
+            o.kill()
+
+
+
 
 

@@ -34,20 +34,23 @@ class Ball():
         abstand = dx**2+dy**2
         v1d = self.v[0]*dx + self.v[1]*dy
         v2d = o.v[0]*dx + o.v[1]*dy
-        if abstand < (2*self.r)**2:
+        f = (-0.0001)
+        while abstand < (2*self.r)**2:
+            self.x += f * self.v[0]
+            self.y += f * self.v[1]
+            o.x += f * o.v[0]
+            o.y += f * o.v[1]
+            abstand = ((self.x - o.x)**2 + (self.y - o.y)**2)
+        if abstand < (2*self.r)**2 + 0.0001:
             self.v[0] = self.v[0] -dx * (v1d-v2d)/abstand
             self.v[1] = self.v[1] -dy* (v1d-v2d)/abstand
             o.v[0] = o.v[0] - dx * (v2d - v1d)/abstand
             o.v[1] = o.v[1] - dy * (v2d - v1d)/abstand
 
 
+
         self.l.append(abstand)
 
-
-    def export(self):
-        with open("./data.csv", "w") as f:
-            for elem in self.l:
-                f.write(str(elem)+"\n")
 
 
 
@@ -78,7 +81,7 @@ class Ball():
 
 
 
-
+    
 
 
 
