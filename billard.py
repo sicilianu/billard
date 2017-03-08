@@ -5,9 +5,11 @@ import kugel
 import tisch
 import math
 
+
 def reset():
     whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
     balls = t.buildTriangle(0.5, 0.5)
+
 
 def mouseMove(o):
     if draw.mousePressed():
@@ -15,11 +17,11 @@ def mouseMove(o):
         force = 0
         vabsx = (tupel[0] - o.x)
         vabsy = (tupel[1] - o.y)
-        lengthv = math.sqrt(vabsx**2+vabsy**2)
-        vabsxnorm = vabsx/lengthv
-        vabsynorm = vabsy/lengthv
+        lengthv = math.sqrt(vabsx**2 + vabsy**2)
+        vabsxnorm = vabsx / lengthv
+        vabsynorm = vabsy / lengthv
         pygame.event.get()
-        while pygame.mouse.get_pressed() != (0,0,0):
+        while pygame.mouse.get_pressed() != (0, 0, 0):
             force += 0.0000001
             pygame.event.get()
         o.v[0] = -vabsxnorm * force
@@ -28,7 +30,8 @@ def mouseMove(o):
 
 t = tisch.Table()
 t.createTable()
-colors = [color.BLACK, color.WHITE, color.RED, color.BLUE, color.YELLOW, color.PINK]
+colors = [color.BLACK, color.WHITE, color.RED,
+          color.BLUE, color.YELLOW, color.PINK]
 numbers = [str(i) for i in range(16)]
 whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
 balls = t.buildTriangle(0.5, 0.5)
@@ -37,11 +40,11 @@ hell = 0.05
 for b in balls:
 
     if b.marker == True:
-        b.Pos = [heaven,0.9]
-        heaven += 4*b.r
+        b.Pos = [heaven, 0.9]
+        heaven += 4 * b.r
     else:
-        b.Pos = [hell,0.1]
-        hell += 4*b.r
+        b.Pos = [hell, 0.1]
+        hell += 4 * b.r
 draw.show(1)
 while True:
     draw.clear()
@@ -64,17 +67,4 @@ while True:
         whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
         balls = t.buildTriangle(0.5, 0.5)
 
-
-
-
-
-
-
     draw.show(1)
-
-
-
-
-
-
-

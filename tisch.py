@@ -106,11 +106,9 @@ class Table():
         triangle = [1, 1, 0, 1, 8, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0]
         tmp = []
         for i, pair in enumerate(numcol):
-
             xprev = x0
-        yprev = y0
-        upper = y0
-        for i in range(n):
+            yprev = y0
+            upper = y0
             if i != 0:
                 y0 = upper + 0.01
                 x0 -= 0.05
