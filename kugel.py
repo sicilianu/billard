@@ -21,7 +21,7 @@ class Ball():
         self.number = number
         self.drawBall()
         self.Pos = None
-
+        self.dead = False
     def drawBall(self):
         draw.setPenColor(self.color)
         draw.filledCircle(self.x, self.y, self.r)

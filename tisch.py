@@ -160,20 +160,27 @@ class Table():
         """Remove a ball from the table if it has hit a hole."""
         if self.ballInHole(o):
             self.killBall(o)
+            o.dead = True
+            return True
+        else:
+            return False
 
+    def reviveWhite(self,ball):
+        """Put white ball back to starting position."""
+        ball.x = 0.7
+        ball.y = 0.5
     def killBall(self, o):
         """Remove a ball from the table."""
         o.v = [0, 0]
         if o.number == "0":
-            o.x = 0.75
-            o.y = 0.5
+            self.reviveWhite(o)
         else:
             o.x = o.Pos[0]
             o.y = o.Pos[1]
 
     class queue:
 
-        def __init__(self, whiteball, length=0.2, width=0.05):
+        def __init__(self, whiteBall,length=0.2, width=0.05):
             self.length = length
             self.width = width
             self.color = color.BROWN
@@ -181,11 +188,11 @@ class Table():
             self.y = 0.0
             self.xend = 0
             self.yend = 0
-            self.setPosition(whiteball)
-            self.drawQueue(whiteball)
             self.mousePos = draw.mousePosition()
+            self.ball = whiteBall
 
-        def setPosition(self, ball):
+        def setPosition(self):
+            ball = self.ball
             mouse = draw.mousePosition()
             c = math.sqrt((mouse[0] - ball.x) ** 2 + (mouse[1] - ball.y) ** 2)
             a = mouse[0] - ball.x
@@ -199,7 +206,8 @@ class Table():
             self.xend = xoncircleend
             self.yend = yoncircleend
 
-        def drawQueue(self, ball):
+        def drawQueue(self):
+            ball = self.ball
             if ball.v == [0, 0]:
                 draw.setPenColor(self.color)
                 dir = (self.xend - self.x, self.yend - self.y)
@@ -212,3 +220,16 @@ class Table():
                 y = [self.y + scale * dirscaled[1], self.yend + scale * dirscaled[1], self.yend - scale * dirscaled[1],
                      self.y - scale * dirscaled[1], self.y]
                 draw.filledPolygon(x, y)
+class Player:
+    def __init__(self, namestring):
+        self.namestring = namestring
+        self.full = False
+        self.hashit = False
+        self.hits = 0
+        self.eightballhit = False
+        self.isPlaying = False
+    def talk(self):
+        draw.setPenColor(color.RED)
+        draw.text(0.5,0.8, self.namestring+" ist dran.")
+
+
