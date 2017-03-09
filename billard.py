@@ -53,9 +53,12 @@ for b in balls:
         hell += 4*b.r
 draw.show(1)
 while True:
+
     draw.clear()
     t.createTable()
+
     whiteBall.drawBall()
+
     whiteBall.nextPosition()
     t.reflection(whiteBall)
     mouseMove(whiteBall,balls)
@@ -69,6 +72,7 @@ while True:
         for other in balls:
             if elem != other:
                 elem.collision(other)
+    q = t.queue(whiteBall)
     if draw.hasNextKeyTyped():
         whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
         balls = t.buildTriangle(0.5, 0.5)

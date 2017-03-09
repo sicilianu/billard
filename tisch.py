@@ -170,3 +170,46 @@ class Table():
         else:
             o.x = o.Pos[0]
             o.y = o.Pos[1]
+
+
+
+
+    class queue:
+
+        def __init__(self, whiteball,length = 0.2, width = 0.05):
+            self.length = length
+            self.width = width
+            self.color = color.BROWN
+            self.x = 0.0
+            self.y = 0.0
+            self.xend = 0
+            self.yend = 0
+            self.setPosition(whiteball)
+            self.drawQueue(whiteball)
+            self.mousePos = draw.mousePosition()
+        def setPosition(self, ball):
+            mouse = draw.mousePosition()
+            c = math.sqrt((mouse[0]-ball.x)**2 +(mouse[1]-ball.y)**2)
+            a = mouse[0]-ball.x
+            b = mouse[1] - ball.y
+            xoncircle = ball.x + kugel.radius*(a/c)
+            yoncircle = ball.y + kugel.radius*(b/c)
+            xoncircleend = ball.x + kugel.radius*10*(a/c)
+            yoncircleend = ball.y + kugel.radius*10*(b/c)
+            self.x = xoncircle
+            self.y = yoncircle
+            self.xend = xoncircleend
+            self.yend = yoncircleend
+        def drawQueue(self,ball):
+            if ball.v == [0,0]:
+                draw.setPenColor(self.color)
+                dir = (self.xend-self.x, self.yend-self.y)
+                lengthdir = math.sqrt(dir[0]**2+dir[1]**2)
+                dirflip = float(-dir[1]), float(dir[0])
+                dirscaled = dirflip[0]/lengthdir, dirflip[1]/lengthdir
+                scale = 0.01
+                x = [self.x + scale*dirscaled[0], self.xend+scale*dirscaled[0], self.xend-scale*dirscaled[0], self.x-scale*dirscaled[0], self.x]
+                y = [self.y + scale*dirscaled[1], self.yend+scale*dirscaled[1], self.yend-scale*dirscaled[1], self.y-scale*dirscaled[1], self.y]
+                draw.filledPolygon(x,y)
+
+
