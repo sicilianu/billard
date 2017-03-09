@@ -95,15 +95,16 @@ class Table():
         xprev = x0
         yprev = y0
         upper = 0
+        xmove = math.sqrt((kugel.radius*2)**2 - kugel.radius**2)
         for i in range(0,6):
             if i != 0:
-                y0 = upper + r
-                x0 -= 2*r-0.003
+                y0 = upper + kugel.radius
+                x0 -= xmove + 0.002
             for j in range(i+1):
                 tmp.append((x0,y0))
                 if j == 0:
                     upper = y0
-                y0 -= r*2+0.002
+                y0 -= kugel.radius*2+0.002
         return tmp
 
     def buildTriangle(self, x0, y0, n=6):

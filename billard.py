@@ -29,8 +29,8 @@ def mouseMove(o,b):
             while pygame.mouse.get_pressed() != (0,0,0):
                 force += 0.00000001
                 pygame.event.get()
-                #if force > 0.01:
-                #    break
+                if force > 0.01:
+                    break
             o.v[0] = -vabsxnorm * force
             o.v[1] = -vabsynorm * force
 
@@ -79,7 +79,7 @@ while True:
 
 
 
-    draw.show(0.5)
+    draw.show(0.25)
 
 
 
