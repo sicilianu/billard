@@ -95,16 +95,16 @@ class Table():
         xprev = x0
         yprev = y0
         upper = 0
-        xmove = math.sqrt((kugel.radius*2)**2 - kugel.radius**2)
-        for i in range(0,6):
+        xmove = math.sqrt((kugel.radius * 2) ** 2 - kugel.radius ** 2)
+        for i in range(0, 6):
             if i != 0:
                 y0 = upper + kugel.radius
                 x0 -= xmove + 0.002
-            for j in range(i+1):
-                tmp.append((x0,y0))
+            for j in range(i + 1):
+                tmp.append((x0, y0))
                 if j == 0:
                     upper = y0
-                y0 -= kugel.radius*2+0.002
+                y0 -= kugel.radius * 2 + 0.002
         return tmp
 
     def buildTriangle(self, x0, y0, n=6):
@@ -116,7 +116,7 @@ class Table():
         proper initial positions. Returns a list of ball objects. This
         list is the one that is supposed to bo used throughout the game."""
         numcol = [(color.YELLOW, "1"), (color.BLUE, "2"), (color.RED, "3"),
-                  (color.PINK, "4"),  (color.BLACK, "8"), (color.DARK_GREEN, "6"),
+                  (color.PINK, "4"), (color.BLACK, "8"), (color.DARK_GREEN, "6"),
                   (color.BROWN, "7"), (color.ORANGE, "5"), (color.YELLOW, "9"),
                   (color.BLUE, "10"), (color.RED, "11"), (color.PINK, "12"),
                   (color.ORANGE, "13"), (color.DARK_GREEN, "14"),
@@ -125,7 +125,7 @@ class Table():
         xprev = x0
         yprev = y0
 
-        coords = self.triangleCoords(0.5,0.5,0.02)
+        coords = self.triangleCoords(0.5, 0.5, 0.02)
         tmp = []
 
         coords = self.triangleCoords(0.5, 0.5)
@@ -146,8 +146,8 @@ class Table():
         """
         hit = False
         for k, v in self.corners.items():
-            distsquare = ((b.x - v[0])**2 + (b.y - v[1])**2)
-            if distsquare <= (b.r * 2)**2:
+            distsquare = ((b.x - v[0]) ** 2 + (b.y - v[1]) ** 2)
+            if distsquare <= (b.r * 2) ** 2:
                 hit = True
         if b.y < 0.25 and b.y > 0.1:
             hit = True
@@ -171,12 +171,9 @@ class Table():
             o.x = o.Pos[0]
             o.y = o.Pos[1]
 
-
-
-
     class queue:
 
-        def __init__(self, whiteball,length = 0.2, width = 0.05):
+        def __init__(self, whiteball, length=0.2, width=0.05):
             self.length = length
             self.width = width
             self.color = color.BROWN
@@ -187,29 +184,31 @@ class Table():
             self.setPosition(whiteball)
             self.drawQueue(whiteball)
             self.mousePos = draw.mousePosition()
+
         def setPosition(self, ball):
             mouse = draw.mousePosition()
-            c = math.sqrt((mouse[0]-ball.x)**2 +(mouse[1]-ball.y)**2)
-            a = mouse[0]-ball.x
+            c = math.sqrt((mouse[0] - ball.x) ** 2 + (mouse[1] - ball.y) ** 2)
+            a = mouse[0] - ball.x
             b = mouse[1] - ball.y
-            xoncircle = ball.x + kugel.radius*(a/c)
-            yoncircle = ball.y + kugel.radius*(b/c)
-            xoncircleend = ball.x + kugel.radius*10*(a/c)
-            yoncircleend = ball.y + kugel.radius*10*(b/c)
+            xoncircle = ball.x + kugel.radius * (a / c)
+            yoncircle = ball.y + kugel.radius * (b / c)
+            xoncircleend = ball.x + kugel.radius * 10 * (a / c)
+            yoncircleend = ball.y + kugel.radius * 10 * (b / c)
             self.x = xoncircle
             self.y = yoncircle
             self.xend = xoncircleend
             self.yend = yoncircleend
-        def drawQueue(self,ball):
-            if ball.v == [0,0]:
+
+        def drawQueue(self, ball):
+            if ball.v == [0, 0]:
                 draw.setPenColor(self.color)
-                dir = (self.xend-self.x, self.yend-self.y)
-                lengthdir = math.sqrt(dir[0]**2+dir[1]**2)
+                dir = (self.xend - self.x, self.yend - self.y)
+                lengthdir = math.sqrt(dir[0] ** 2 + dir[1] ** 2)
                 dirflip = float(-dir[1]), float(dir[0])
-                dirscaled = dirflip[0]/lengthdir, dirflip[1]/lengthdir
+                dirscaled = dirflip[0] / lengthdir, dirflip[1] / lengthdir
                 scale = 0.01
-                x = [self.x + scale*dirscaled[0], self.xend+scale*dirscaled[0], self.xend-scale*dirscaled[0], self.x-scale*dirscaled[0], self.x]
-                y = [self.y + scale*dirscaled[1], self.yend+scale*dirscaled[1], self.yend-scale*dirscaled[1], self.y-scale*dirscaled[1], self.y]
-                draw.filledPolygon(x,y)
-
-
+                x = [self.x + scale * dirscaled[0], self.xend + scale * dirscaled[0], self.xend - scale * dirscaled[0],
+                     self.x - scale * dirscaled[0], self.x]
+                y = [self.y + scale * dirscaled[1], self.yend + scale * dirscaled[1], self.yend - scale * dirscaled[1],
+                     self.y - scale * dirscaled[1], self.y]
+                draw.filledPolygon(x, y)
