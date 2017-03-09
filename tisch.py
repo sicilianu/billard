@@ -3,6 +3,7 @@ import draw
 import color
 import kugel
 import time
+import math
 
 class Table():
     def __init__(self, edge=0.03):
@@ -66,21 +67,20 @@ class Table():
         if string == "lower" or string == "upper":
             o.v = [o.v[0], o.v[1] * (-1)]
 
-    def triangleCoords(self,x0,y0):
+    def triangleCoords(self,x0,y0,r):
         tmp = []
         xprev = x0
         yprev = y0
         upper = 0
         for i in range(0,6):
             if i != 0:
-                y0 = upper + 0.01
-                x0 -= 0.05
-            for j in range(i):
+                y0 = upper + r
+                x0 -= 2*r-0.003
+            for j in range(i+1):
                 tmp.append((x0,y0))
-                print(x0,y0)
                 if j == 0:
                     upper = y0
-                y0 -= 0.05
+                y0 -= r*2+0.002
         return tmp
 
 
@@ -92,7 +92,7 @@ class Table():
         xprev = x0
         yprev = y0
 
-        coords = self.triangleCoords(0.5,0.5)
+        coords = self.triangleCoords(0.5,0.5,0.02)
         tmp = []
         for i in range(1, len(triangle)+1):
             ball = kugel.Ball(numcol[str(i)][0], bool(triangle[i-1]),numcol[str(i)][1], coords[i-1][0],coords[i-1][1])

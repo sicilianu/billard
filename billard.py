@@ -9,21 +9,30 @@ def reset():
     whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
     balls = t.buildTriangle(0.5, 0.5)
 
-def mouseMove(o):
+def mouseMove(o,b):
+
+
     if draw.mousePressed():
-        tupel = list(draw.mousePosition())
-        force = 0
-        vabsx = (tupel[0] - o.x)
-        vabsy = (tupel[1] - o.y)
-        lengthv = math.sqrt(vabsx**2+vabsy**2)
-        vabsxnorm = vabsx/lengthv
-        vabsynorm = vabsy/lengthv
-        pygame.event.get()
-        while pygame.mouse.get_pressed() != (0,0,0):
-            force += 0.0000001
+        stehen = 0
+        for i in balls:
+            if i.v == [0, 0]:
+                stehen += 1
+        if stehen == len(balls):
+            tupel = list(draw.mousePosition())
+            force = 0
+            vabsx = (tupel[0] - o.x)
+            vabsy = (tupel[1] - o.y)
+            lengthv = math.sqrt(vabsx**2+vabsy**2)
+            vabsxnorm = vabsx/lengthv
+            vabsynorm = vabsy/lengthv
             pygame.event.get()
-        o.v[0] = -vabsxnorm * force
-        o.v[1] = -vabsynorm * force
+            while pygame.mouse.get_pressed() != (0,0,0):
+                force += 0.00000001
+                pygame.event.get()
+                #if force > 0.01:
+                #    break
+            o.v[0] = -vabsxnorm * force
+            o.v[1] = -vabsynorm * force
 
 
 t = tisch.Table()
@@ -49,7 +58,7 @@ while True:
     whiteBall.drawBall()
     whiteBall.nextPosition()
     t.reflection(whiteBall)
-    mouseMove(whiteBall)
+    mouseMove(whiteBall,balls)
     t.Holes(whiteBall)
     for elem in balls:
         elem.nextPosition()
@@ -70,7 +79,7 @@ while True:
 
 
 
-    draw.show(1)
+    draw.show(0.5)
 
 
 
