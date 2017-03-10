@@ -26,11 +26,7 @@ def quiet(balls,whiteBall):
 
 def mouseMove(o,b):
     if draw.mousePressed():
-        stehen = 0
-        for i in balls:
-            if i.v == [0, 0]:
-                stehen += 1
-        if stehen == len(balls):
+        if quiet(balls,whiteBall):
             tupel = list(draw.mousePosition())
             force = 0
             vabsx = (tupel[0] - o.x)
@@ -58,38 +54,85 @@ def lap(player,other):
     - If player has not hit any balls, it is the other player's turn
     - [Not implemented]If player has hit the white ball, after movement the white ball's position is reset and it is the other player's turn."""
     if player.isPlaying:
+        if len(player.scoredBalls) == 7:
+            player.finished = True
+        stateBefore = len(other.scoredBalls)
         player.talk()
         whiteBall.nextPosition()
         t.reflection(whiteBall)
         mouseMove(whiteBall, balls)
         t.Holes(whiteBall)
-
         if whiteBall.v != [0, 0]:
-            player.hashit = True
-        if quiet(balls,whiteBall) and player.hashit:
-            print("hier")
-            q.setPosition()
-            q.drawQueue()
+            player.hasHit = True
+
+
+
+        if quiet(balls,whiteBall) and player.hasHit and not t.hitBallsRound:
+            # If no ball is moving, the player has hit the white ball
+            # and has not scored any points in this round, make the other player the current player
             player.isPlaying = False
             other.isPlaying = True
-
+            player.hasHit= False
+            t.hitBallsRound = []
             if whiteBall.dead:
                 t.reviveWhite(whiteBall)
                 whiteBall.dead = False
 
+        elif quiet(balls,whiteBall) and player.hasHit and t.hitBallsRound:
+            # If no ball is moving, the player has hit the white ball and has scored any points, it is his turn again.
+            for i in t.hitBallsRound:
+                if i.number == "8":
+                    player.isPlaying = False
+                    other.isPlaying = False
+                    other.won = True
 
+                    if player.finished:
+                        player.won = True
+                        other.isPlaying = False
+                        other.won = False
+
+
+                elif not player.scoredBalls and not other.scoredBalls:
+                    player.scoredBalls.append(i)
+                elif not player.scoredBalls:
+                    if i.marker == other.marker:
+                        other.scoredBalls.append(i)
+                    else:
+                        player.scoredBalls.append(i)
+                elif not other.scoredBalls:
+                    if i.marker == player.marker:
+                        player.scoredBalls.append(i)
+                    else:
+                        other.scoredBalls.append(i)
+                elif i.marker == player.marker():
+                    player.scoredBalls.append(i)
+                else:
+                    other.scoredBalls.append(i)
+                if whiteBall.dead:
+                    t.reviveWhite(whiteBall)
+                    whiteBall.dead = False
+
+            t.hitBallsRound = []
+            player.hasHit = False
+
+        if stateBefore != len(other.scoredBalls):
+            player.isPlaying = False
+            other.isPlaying = True
 
         for elem in balls:
             elem.nextPosition()
             elem.drawBall()
             t.reflection(elem)
             elem.collision(whiteBall)
-            player.hashit = t.Holes(elem)
+            if t.Holes(elem):
+                t.hitBallsRound.append(elem)
+
+
             for other in balls:
                 if elem != other:
                     elem.collision(other)
 
-movingBefore = False
+
 t = tisch.Table()
 t.createTable()
 whiteBall = kugel.Ball(color.WHITE, False, "0", 0.75, 0.5)
@@ -110,21 +153,21 @@ draw.show(1)
 player1.isPlaying=True
 while True:
     draw.clear()
+    if player1.won:
+        draw.setPenColor(color.RED)
+        draw.setPenRadius(0.01)
+        draw.text(0.5,0.8,player1.namestring + " hat gewonnen!")
+    elif player2.won:
+        draw.setPenColor(color.RED)
+        draw.setPenRadius(0.01)
+        draw.text(0.5,0.8,player2.namestring + " hat gewonnen!")
+
+
     t.createTable()
     whiteBall.drawBall()
     ##############################
     lap(player1,player2)
     lap(player2,player1)
-
-
-
-
-
-
-
-
-
-
     ##############################
     whiteBall.nextPosition()
     t.reflection(whiteBall)
@@ -135,10 +178,12 @@ while True:
         elem.drawBall()
         t.reflection(elem)
         elem.collision(whiteBall)
-        t.Holes(elem)
         for other in balls:
             if elem != other:
                 elem.collision(other)
+    if quiet(balls, whiteBall):
+        q.setPosition()
+        q.drawQueue()
 
 
 
@@ -147,7 +192,13 @@ while True:
 
 
 
-    draw.show(0.25)
+
+
+
+
+
+
+    draw.show(1)
 
 
 

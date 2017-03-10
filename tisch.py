@@ -14,6 +14,8 @@ class Table():
         self.limitsy = (0.25, 0.7)
         self.corners = {"Upperleft": (0.05, 0.95), "Lowerleft": (
             0.05, 0.25), "Upperright": (0.95, 0.7), "Lowerright": (0.95, 0.25)}
+        self.deadBalls = []
+        self.hitBallsRound = []
 
     def createTable(self):
         """Draw all the entities on the table."""
@@ -104,7 +106,7 @@ class Table():
                 tmp.append((x0, y0))
                 if j == 0:
                     upper = y0
-                y0 -= kugel.radius * 2 + 0.002
+                y0 -= kugel.radius * 2 +0.002
         return tmp
 
     def buildTriangle(self, x0, y0, n=6):
@@ -158,9 +160,10 @@ class Table():
 
     def Holes(self, o):
         """Remove a ball from the table if it has hit a hole."""
-        if self.ballInHole(o):
+        if self.ballInHole(o) and o not in self.deadBalls:
             self.killBall(o)
             o.dead = True
+            self.deadBalls.append(o)
             return True
         else:
             return False
@@ -224,12 +227,19 @@ class Player:
     def __init__(self, namestring):
         self.namestring = namestring
         self.full = False
-        self.hashit = False
+        self.hasHit = False
         self.hits = 0
         self.eightballhit = False
         self.isPlaying = False
+        self.hasHitHole = False
+        self.scoredBalls = []
+        self.finished = False
+        self.won = False
     def talk(self):
         draw.setPenColor(color.RED)
         draw.text(0.5,0.8, self.namestring+" ist dran.")
+
+    def marker(self):
+        return self.scoredBalls[0].marker
 
 

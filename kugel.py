@@ -22,6 +22,11 @@ class Ball():
         self.drawBall()
         self.Pos = None
         self.dead = False
+
+    def __str__(self):
+        return self.number
+    def __repr__(self):
+        return self.__str__()
     def drawBall(self):
         draw.setPenColor(self.color)
         draw.filledCircle(self.x, self.y, self.r)
@@ -38,7 +43,7 @@ class Ball():
         abstand = dx**2 + dy**2
         v1d = self.v[0] * dx + self.v[1] * dy
         v2d = o.v[0] * dx + o.v[1] * dy
-        f = (-0.0001)
+        f = (-0.001)
         while abstand < (2 * self.r)**2:
             self.x += f * self.v[0]
             self.y += f * self.v[1]
