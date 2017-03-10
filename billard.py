@@ -75,7 +75,7 @@ def lap(player,other):
             player.hasHit= False
             t.hitBallsRound = []
             if whiteBall.dead:
-                t.reviveWhite(whiteBall)
+                t.reviveWhite(whiteBall,balls)
                 whiteBall.dead = False
 
         elif quiet(balls,whiteBall) and player.hasHit and t.hitBallsRound:
@@ -109,7 +109,7 @@ def lap(player,other):
                 else:
                     other.scoredBalls.append(i)
                 if whiteBall.dead:
-                    t.reviveWhite(whiteBall)
+                    t.reviveWhite(whiteBall,balls)
                     whiteBall.dead = False
 
             t.hitBallsRound = []

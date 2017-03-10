@@ -44,6 +44,12 @@ class Ball():
         v1d = self.v[0] * dx + self.v[1] * dy
         v2d = o.v[0] * dx + o.v[1] * dy
         f = (-0.001)
+
+        if self.v == [0,0] and o.v == [0,0]:
+            while abstand < (2*self.r)**2:
+                self.x += 0.0001
+                o.x -= 0.0001
+
         while abstand < (2 * self.r)**2:
             self.x += f * self.v[0]
             self.y += f * self.v[1]

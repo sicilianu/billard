@@ -106,7 +106,7 @@ class Table():
                 tmp.append((x0, y0))
                 if j == 0:
                     upper = y0
-                y0 -= kugel.radius * 2 +0.002
+                y0 -= kugel.radius * 2 + 0.002
         return tmp
 
     def buildTriangle(self, x0, y0, n=6):
@@ -168,18 +168,34 @@ class Table():
         else:
             return False
 
-    def reviveWhite(self,ball):
+    def reviveWhite(self,ball,balls):
         """Put white ball back to starting position."""
         ball.x = 0.7
         ball.y = 0.5
+        if self.interfere(ball,balls):
+            for i in self.interfere(ball,balls):
+                abstand = ((ball.x - i.x)**2 + (ball.y - i.y)**2)
+                while abstand < (2 * self.r) ** 2:
+                    ball.y += 0.0001
+
+
     def killBall(self, o):
         """Remove a ball from the table."""
         o.v = [0, 0]
         if o.number == "0":
-            self.reviveWhite(o)
+            o.x = 0.01
+            o.y = 0.01
         else:
             o.x = o.Pos[0]
             o.y = o.Pos[1]
+
+    def interfere(self, ball, balls):
+        r = []
+        for i in balls:
+            d = ((ball.x - i.x) ** 2 + (ball.y - i.y) ** 2)
+            if d < kugel.radius ** 2:
+                r.append(i)
+        return r
 
     class queue:
 
@@ -223,6 +239,7 @@ class Table():
                 y = [self.y + scale * dirscaled[1], self.yend + scale * dirscaled[1], self.yend - scale * dirscaled[1],
                      self.y - scale * dirscaled[1], self.y]
                 draw.filledPolygon(x, y)
+
 class Player:
     def __init__(self, namestring):
         self.namestring = namestring
